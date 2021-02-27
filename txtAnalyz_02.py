@@ -32,13 +32,18 @@ garpike and stingray are also present.'''
 txtAnalyse = {}
 
 for itm, tExt in enumerate(TEXTS, start=1):
-    txtList = tExt.strip(",.!?)(-").split(' ')
-    txtAnalyse[f'Text{itm}'] = {'numberOfWords' : sum(1 for iTem in txtList if not iTem.isdecimal()),
-                                  'titlecaseWords' : sum(1 for iTem in txtList if iTem.istitle()),
-                                  'uppercaseWords' : sum(1 for iTem in txtList if iTem.isupper()),
-                                  'lowercase words': sum(1 for iTem in txtList if iTem.islower()),
-                                  'numeric strings' : sum(1 for iTem in txtList if iTem.isdecimal()),
-                                  'sumOfNumbers' : sum(int(iTem) for iTem in txtList if iTem.isdecimal()),
+    txtLstDirt = tExt.split()
+    txtList = []
+    while txtLstDirt:
+        wOrd = txtLstDirt.pop()
+        txtList.append(wOrd.strip(",:/.!?)(-"))
+    txtAnalyse[f'Text{itm}'] = {'numberOfWords' : sum(1 for iTem in txtList),  #if not iTem.isnumeric()
+                                  'titleCaseWords' : sum(1 for iTem in txtList if iTem.istitle()),
+                                  'upperCaseWords' : sum(1 for iTem in txtList if iTem.isupper()), # and iTem.isalpha()
+                                  'uppCaseWordsLst': [iTem for iTem in txtList if iTem.isupper()], # and iTem.isalpha()
+                                  'lowerCaseWords': sum(1 for iTem in txtList if iTem.islower()),
+                                  'numericStrings' : sum(1 for iTem in txtList if iTem.isnumeric()),
+                                  'sumOfNumbers' : sum(float(iTem) for iTem in txtList if iTem.isnumeric()),
                                   'wordOccurrence' : {iTem : txtList.count(iTem) for iTem in txtList}}
 
     wordLengthOccurrence = {}
@@ -80,10 +85,11 @@ if txtSelect not in range(1,len(txtAnalyse.keys())+1):
 # ------------------------- printing -------------------------
 print(f'''
 - počet slov je: {txtAnalyse[f'Text{txtSelect}']['numberOfWords']},
-- počet slov začínajících velkým písmenem je: {txtAnalyse[f'Text{txtSelect}']['titlecaseWords']},
-- počet slov psaných velkými písmeny je: {txtAnalyse[f'Text{txtSelect}']['uppercaseWords']},
-- počet slov psaných malými písmenyje: {txtAnalyse[f'Text{txtSelect}']['lowercase words']},
-- počet čísel (ne cifer)je: {txtAnalyse[f'Text{txtSelect}']['numeric strings']},
+- počet slov začínajících velkým písmenem je: {txtAnalyse[f'Text{txtSelect}']['titleCaseWords']},
+- počet slov psaných velkými písmeny je: {txtAnalyse[f'Text{txtSelect}']['upperCaseWords']},
+- slova psaná velkými písmeny jsou: {txtAnalyse[f'Text{txtSelect}']['uppCaseWordsLst']},
+- počet slov psaných malými písmenyje: {txtAnalyse[f'Text{txtSelect}']['lowerCaseWords']},
+- počet čísel (ne cifer)je: {txtAnalyse[f'Text{txtSelect}']['numericStrings']},
 - sumu všech čísel (ne cifer) v textuje: {txtAnalyse[f'Text{txtSelect}']['sumOfNumbers']}.
 ''')
 
